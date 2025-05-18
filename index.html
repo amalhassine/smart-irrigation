@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Irrigation</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://i.ibb.co/2P1jJZ9/smart-irrigation.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            text-align: center;
+            padding-top: 100px;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        button {
+            padding: 15px 25px;
+            font-size: 16px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .on { background-color: #28a745; color: white; }
+        .off { background-color: #dc3545; color: white; }
+        .logout { background-color: #ffc107; color: black; }
+    </style>
+</head>
+<body>
+    <div class="container" id="loginForm">
+        <h2>Connexion</h2>
+        <input type="text" id="username" placeholder="Nom d'utilisateur"><br><br>
+        <input type="password" id="password" placeholder="Mot de passe"><br><br>
+        <button onclick="login()">Se connecter</button>
+    </div>
+
+    <div class="container" id="controlPanel" style="display:none;">
+        <h1>SMART IRRIGATION</h1>
+        <p>Contrôle de la pompe via ESP32</p>
+        <button class="on" onclick="sendCommand(true)">Activer Pompe</button>
+        <button class="off" onclick="sendCommand(false)">Désactiver Pompe</button><br>
+        <button class="logout" onclick="logout()">Déconnexion</button>
+    </div>
+
+    <script>
+        function login() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            if (user === "amalhassine" && pass === "amal123") {
+                document.getElementById("loginForm").style.display = "none";
+                document.getElementById("controlPanel").style.display = "block";
+            } else {
+                alert("Nom d'utilisateur ou mot de passe incorrect");
+            }
+        }
+
+        function logout() {
+            document.getElementById("loginForm").style.display = "block";
+            document.getElementById("controlPanel").style.display = "none";
+        }
+
+        function sendCommand(state) {
+            fetch("/api/commandes", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ pompe: state })
+            }).then(res => alert(state ? "Pompe activée" : "Pompe désactivée"));
+        }
+    </script>
+</body>
+</html>
